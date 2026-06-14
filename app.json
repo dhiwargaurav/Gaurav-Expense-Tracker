@@ -17,6 +17,11 @@
         "backgroundColor": "#0F1523"
       },
       "package": "com.dhiwargaurav.dailytracker"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "https://expo.dev/accounts/dhiwargaurav/projects/gaurav-dhiwar-kt0xkiytwx9njoauvs1ut"
+      }
     }
   }
 }
