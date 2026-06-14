@@ -196,33 +196,22 @@ function SetOpeningView({ state, dispatch }) {
         This is your bank/cash balance at the start of the month. Current balance will be auto-calculated as Opening − Expenses.
       </Text>
 
-      <TouchableOpacity onPress={save} style={[styles.submitBtn, { background: C.blue }]}>
+      <TouchableOpacity onPress={save} style={[styles.submitBtn, { backgroundColor: C.blue }]}>
         <Text style={styles.submitBtnText}>Save Opening Balance</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 }
 
-// ── Add Expense Form ────────────────────────────────────
-function AddExpenseView({ dispatch }) {
-  const [amount, setAmount] = useState(""); 
-  const [category, setCategory] = useState("Food");
-  const [note, setNote] = useState(""); 
-  const [date, setDate] = useState(todayISO());
-
-  const save = () => { 
-    const p = parseFloat(amount); 
-    if(!p || p <= 0) return; 
-    dispatch({ type:"ADD_EXPENSE", entry:{ id: Date.now(), date, amount: p, category, note } }); 
-  };
-
+// ── Reusable Mobile Entry Form ────────────────────────────────────
+function EntryForm({ title, cats, category, setCategory, amount, setAmount, note, setNote, date, setDate, onSave, btnColor, btnLabel, onBack }) {
   return (
     <ScrollView contentContainerStyle={styles.viewContainer}>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 28 }}>
-        <TouchableOpacity onPress={() => dispatch({ type:"NAV", view:"home" })} style={styles.backBtn}>
+        <TouchableOpacity onPress={onBack} style={styles.backBtn}>
           <Text style={{ color: C.textPrimary, fontSize: 16 }}>←</Text>
         </TouchableOpacity>
-        <Text style={{ color: C.textPrimary, fontSize: 22, fontWeight: "800" }}>Add Expense</Text>
+        <Text style={{ color: C.textPrimary, fontSize: 22, fontWeight: "800" }}>{title}</Text>
       </View>
 
       <Text style={styles.label}>Amount (₹)</Text>
@@ -230,7 +219,7 @@ function AddExpenseView({ dispatch }) {
 
       <Text style={styles.label}>Category</Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 20 }}>
-        {EXPENSE_CATS.map(c => {
+        {cats.map(c => {
           const isSelected = category === c;
           return (
             <TouchableOpacity key={c} onPress={() => setCategory(c)} style={[styles.catChip, { backgroundColor: isSelected ? C.amber : C.card, borderColor: isSelected ? C.amber : C.border }]}>
@@ -246,10 +235,42 @@ function AddExpenseView({ dispatch }) {
       <Text style={styles.label}>Date (YYYY-MM-DD)</Text>
       <TextInput value={date} onChangeText={setDate} style={styles.input} />
 
-      <TouchableOpacity onPress={save} style={[styles.submitBtn, { backgroundColor: C.coral }]}>
-        <Text style={styles.submitBtnText}>Save Expense</Text>
+      <TouchableOpacity onPress={onSave} style={[styles.submitBtn, { backgroundColor: btnColor, marginTop: 8 }]}>
+        <Text style={styles.submitBtnText}>{btnLabel}</Text>
       </TouchableOpacity>
     </ScrollView>
+  );
+}
+
+function AddExpenseView({ dispatch }) {
+  const [amount, setAmount] = useState(""); 
+  const [category, setCategory] = useState("Food");
+  const [note, setNote] = useState(""); 
+  const [date, setDate] = useState(todayISO());
+
+  const save = () => { 
+    const p = parseFloat(amount); 
+    if(!p || p <= 0) return; 
+    dispatch({ type:"ADD_EXPENSE", entry:{ id: Date.now(), date, amount: p, category, note } }); 
+  };
+
+  return (
+    <EntryForm 
+      title="Add Expense" 
+      cats={EXPENSE_CATS} 
+      category={category} 
+      setCategory={setCategory} 
+      amount={amount} 
+      setAmount={setAmount} 
+      note={note} 
+      setNote={setNote} 
+      date={date} 
+      setDate={setDate} 
+      onSave={save} 
+      btnColor={C.coral} 
+      btnLabel="Save Expense" 
+      onBack={() => dispatch({ type:"NAV", view:"home" })} 
+    />
   );
 }
 
@@ -307,7 +328,6 @@ function SummaryView({ state }) {
                   <Text style={{ color: C.textPrimary, fontWeight: "600", fontSize: 14 }}>{cat}</Text>
                   <Text style={{ color: colors[i % colors.length], fontWeight: "700" }}>{fmt(amt)}</Text>
                 </View>
-                {/* Custom Progress Bar */}
                 <View style={styles.progressBarBg}>
                   <View style={[styles.progressBarFill, { width: `${pct}%`, backgroundColor: colors[i % colors.length] }]} />
                 </View>
@@ -413,7 +433,7 @@ const styles = StyleSheet.create({
   viewContainer: {
     paddingHorizontal: 16,
     paddingTop: 24,
-    paddingBottom: 120, // ensure lists don't hide behind bottom tab nav
+    paddingBottom: 120,
   },
   card: {
     backgroundColor: C.card,
@@ -527,9 +547,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: C.border,
     flexDirection: "row",
-    justifyContent: "around",
+    justifyContent: "space-around",
     paddingTop: 10,
-    paddingBottom: Platform.OS === "ios" ? 24 : 14, // safer bottom padding for screen cuts
+    paddingBottom: Platform.OS === "ios" ? 24 : 14,
   },
   navTab: {
     flex: 1,
