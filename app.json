@@ -4,7 +4,6 @@
     "slug": "daily-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
       "resizeMode": "contain",
@@ -17,10 +16,7 @@
       "adaptiveIcon": {
         "backgroundColor": "#0F1523"
       },
-      "package": "com.yourname.dailytracker"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
+      "package": "com.dhiwargaurav.dailytracker"
     }
   }
 }
