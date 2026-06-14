@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Daily Tracker",
-    "slug": "daily-tracker",
+    "slug": "gaurav-dhiwar-kt0xkiytwx9njoauvs1ut",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
@@ -20,7 +20,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "kt0xkiytwx9njoauvs1ut"
+        "projectId": "3da7479e-df19-41e3-aeeb-fd1f24a05671"
       }
     }
   }
